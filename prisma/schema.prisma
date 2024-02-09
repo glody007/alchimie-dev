@@ -26,6 +26,17 @@ model Post {
     @@index([name])
 }
 
+model Challenge {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String
+    image       String
+    createdAt   DateTime @default(now())
+    day         DateTime
+
+    @@index([name])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
