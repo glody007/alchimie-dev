@@ -25,7 +25,7 @@ export default function Playground() {
         <div className="col-span-3">
             <Editor 
                 defaultValue="// some comment" 
-                defaultLanguage="javascript" 
+                defaultLanguage="html" 
                 theme="vs-dark"
                 onChange={handleChange}
             />
