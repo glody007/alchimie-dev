@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
 
 
 export default function Playground() {
@@ -44,33 +45,49 @@ export default function Playground() {
   }
 
   return (
-    <div className="h-screen grid grid-cols-6">
-        <div className="col-span-2">
+    <ResizablePanelGroup 
+      direction="horizontal"
+    >
+      <ResizablePanel 
+        defaultSize={30}
+      >
+        <div className="h-screen">
             <Editor 
-                defaultValue={html}
-                defaultLanguage="javascript" 
-                theme="vs-dark"
-                onChange={handleChangeHtml}
+              defaultValue={html}
+              defaultLanguage="html" 
+              theme="vs-dark"
+              onChange={handleChangeHtml}
             />
         </div>
-        <div className="h-full col-span-2">
-            <Editor 
-                defaultValue={css}
-                defaultLanguage="css" 
-                theme="vs-dark"
-                onChange={handleChangeCss}
-            />
+      </ResizablePanel>
+      <ResizableHandle />
+      <ResizablePanel 
+        defaultSize={30}
+      >
+        <div className="h-screen">
+          <Editor 
+            defaultValue={css}
+            defaultLanguage="css" 
+            theme="vs-dark"
+            onChange={handleChangeCss}
+          />
         </div>
-        <div className="h-full col-span-2">
-            <iframe
-                srcDoc={srcDoc}
-                title="output"
-                sandbox="allow-scripts"
-                frameBorder="0"
-                height="100%"
-                width="100%"
-            />
+      </ResizablePanel>
+      <ResizableHandle />
+      <ResizablePanel 
+        defaultSize={40}
+      >
+        <div className="h-screen col-span-2">
+          <iframe
+              srcDoc={srcDoc}
+              title="output"
+              sandbox="allow-scripts"
+              frameBorder="0"
+              height="100%"
+              width="100%"
+          />
         </div>
-    </div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
