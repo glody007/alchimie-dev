@@ -43,13 +43,16 @@ export default function Playground() {
   function handleChangeCss(value?: string) {
     setCss(value || '')
   }
+  function handleChangeJs(value?: string) {
+    setJs(value || '')
+  }
 
   return (
     <ResizablePanelGroup 
       direction="horizontal"
     >
       <ResizablePanel 
-        defaultSize={30}
+        defaultSize={25}
       >
         <div className="h-screen">
             <Editor 
@@ -62,7 +65,7 @@ export default function Playground() {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel 
-        defaultSize={30}
+        defaultSize={25}
       >
         <div className="h-screen">
           <Editor 
@@ -75,7 +78,20 @@ export default function Playground() {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel 
-        defaultSize={40}
+        defaultSize={25}
+      >
+        <div className="h-screen">
+          <Editor 
+            defaultValue={js}
+            defaultLanguage="javascript" 
+            theme="vs-dark"
+            onChange={handleChangeJs}
+          />
+        </div>
+      </ResizablePanel>
+      <ResizableHandle />
+      <ResizablePanel 
+        defaultSize={25}
       >
         <div className="h-screen col-span-2">
           <iframe
