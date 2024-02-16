@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
-
+import { Hook, Console, Decode, Unhook } from "console-feed";
 
 export default function Playground() {
   const monaco = useMonaco();
@@ -20,15 +20,26 @@ export default function Playground() {
   const [logs, setLogs] = useState<any>([]);
 
   useEffect(() => {
-    const log = console.log.bind(console)
-    console.log = (...args) => {
-      setLogs((pastLogs: any[]) => {
-        log(pastLogs)
-        return [...pastLogs, ...args]
-      })
-      log(...args)
+  
+  }, []);
+
+  // run once!
+  useEffect(() => {
+    const onMessage = function(event: MessageEvent) {
+      console.log("Message received from the child: " + event.data); // Message received from child
     }
-  });
+      
+    window.addEventListener('message', onMessage);
+    const hookedConsole = Hook(
+      window.console,
+      (log) => setLogs((currLogs: any) => [...currLogs, log]),
+      false
+    )
+    return () => {
+      window.removeEventListener('message', onMessage);
+      Unhook(hookedConsole)
+    }
+  }, [])
 
   useEffect(() => {
     // 👇️ scroll to bottom every time messages change
@@ -59,11 +70,25 @@ export default function Playground() {
   function handleChangeHtml(value?: string) {
     setHtml(value || '')
   }
+
   function handleChangeCss(value?: string) {
     setCss(value || '')
   }
+
   function handleChangeJs(value?: string) {
-    setJs(value || '')
+    const jsDoc = `
+      const log = console.log.bind(console)
+      try {
+        console.log = (...args) => {
+          window.parent.postMessage(...args, "*");
+          log(...args)
+        }
+        ${value}
+      } catch(e) {
+        window.parent.postMessage(e, "*");
+      }
+    `
+    if(value) setJs(jsDoc)
   }
 
   return (
@@ -124,27 +149,21 @@ export default function Playground() {
         >
           <div className="h-full col-span-2">
             <iframe
-                srcDoc={srcDoc}
-                title="output"
-                sandbox="allow-scripts"
-                frameBorder="0"
-                height="100%"
-                width="100%"
+              srcDoc={srcDoc}
+              title="output"
+              sandbox="allow-scripts"
+              frameBorder="0"
+              height="100%"
+              width="100%"
             />
           </div>
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel 
-          defaultSize={0}
+          defaultSize={20}
         >
-          <div ref={logRef} className="h-full divide-y divide-gray-500 text-white text-sm overflow-y-scroll bg-black/90">
-            {logs.map((log: any, index: number) => (
-              <div key={index} className="px-4 py-2 flex gap-4">
-                <div>
-                  {JSON.stringify(log)}
-                </div>
-              </div>
-            ))}
+          <div className="h-full overflow-y-scroll" style={{ backgroundColor: '#242424' }}>
+            <Console logs={logs} variant="dark" />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
