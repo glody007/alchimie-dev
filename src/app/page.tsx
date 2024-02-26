@@ -1,8 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
-import Image from "next/image";
 import Link from "next/link";
 import { ChallengeCard } from "~/components/challenge/challenge-card";
-import { Button } from "~/components/ui/button";
 
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
