@@ -27,4 +27,51 @@ export const challengeRouter = createTRPCRouter({
 
       return todayChallenge;
     }),
+
+  register: protectedProcedure
+    .input(z.object({ challengeId: z.string()}))
+    .mutation(async ({ ctx, input }) => {
+      const challenge = await ctx.db.challenge.findFirst({
+        where: {
+          id: input.challengeId
+        }
+      })
+
+      if(!challenge) throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Challenge introuvable"
+      })
+
+      const existingSolution = await ctx.db.challengeSolution.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          challengeId: challenge.id
+        }
+      })
+
+      if(existingSolution) return existingSolution
+
+      return await ctx.db.challengeSolution.create({
+        data: {
+          userId: ctx.session.user.id,
+          challengeId: challenge.id
+        }
+      })
+
+    }),
+    
+  solution: publicProcedure
+    .input(z.object({ solutionId: z.string()}))
+    .query(async ({ ctx, input }) => {
+      const solution = await ctx.db.challengeSolution.findFirst({
+        where: { id: input.solutionId }
+      })
+
+      if(!solution) throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Solution introuvable"
+      })
+
+      return solution;
+    }),
 });

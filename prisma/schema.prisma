@@ -27,7 +27,7 @@ model Post {
 }
 
 model Challenge {
-    id          String      @id @default(cuid())
+    id          String   @id @default(cuid())
     name        String
     description String
     image       String
@@ -40,7 +40,7 @@ model Challenge {
 }
 
 model ChallengeSolution {
-    id          Int      @id @default(autoincrement())
+    id          String      @id @default(cuid())
     userId      String 
     challengeId String
 
