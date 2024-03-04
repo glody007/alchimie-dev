@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useTransition } from "react"
 import { Button } from "~/components/ui/button"
 import { api } from "~/trpc/react"
 import { Icons } from "../icons"
@@ -12,11 +13,15 @@ interface Props {
 
 export function ChallengeRegisterButton({ challengeId }: Props) {
     const { data: session } = useSession()
+    const [isPending, startTransition] = useTransition()
     const router = useRouter()
 
     const { mutate, isLoading } = api.challenge.register.useMutation({
         onSuccess: (data) => {
-            router.push(`/challenge/solution/${data.id}`)
+            startTransition(() => {
+                router.push(`/challenge/solution/${data.id}`)
+                console.log("created")
+            })
         },
         onError: () => {
             console.log("something went wrong")
@@ -33,7 +38,7 @@ export function ChallengeRegisterButton({ challengeId }: Props) {
 
     return (
         <Button size="lg" onClick={register}>
-            {isLoading && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+            {(isLoading || isPending) && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Start
         </Button>
     )

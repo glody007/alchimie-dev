@@ -1,4 +1,8 @@
-import { api } from "~/trpc/server"
+"use client"
+
+import Playground from "~/app/playground/vanilla/page"
+import { api } from "~/trpc/react"
+
 
 interface Props {
     params: {
@@ -6,12 +10,14 @@ interface Props {
     }
 }
 
-export default async function ChallengeSolutionPage({ params }: Props) {
-    const solution = await api.challenge.solution.query({ solutionId: params.id })
+export default function ChallengeSolutionPage({ params }: Props) {
+    const { data, isLoading } =  api.challenge.solution.useQuery({ solutionId: params.id })
+    
+    if(isLoading) return <div className="flex min-h-screen justify-center items-center">Loading...</div>
+
+    if(!data) return <div className="flex min-h-screen justify-center items-center">Error...</div>
 
     return (
-        <div className="flex min-h-screen justify-center items-center container mx-auto">
-            <p className="text-muted-foreground text-sm">User ID: {solution.userId} --&gt; Challenge ID: {solution.challengeId}</p>
-        </div>
+        <Playground />
     )
 }

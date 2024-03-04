@@ -35,6 +35,7 @@ model Challenge {
     day         DateTime
 
     challengesSolutions ChallengeSolution[]
+    languages           Language[]
 
     @@index([name])
 }
@@ -43,9 +44,11 @@ model ChallengeSolution {
     id          String      @id @default(cuid())
     userId      String 
     challengeId String
+    groupeId    String      @unique
 
-    user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    challenge   Challenge    @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+    user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    challenge   Challenge   @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+    group       CodeGroup   @relation(fields: [groupeId], references: [id], onDelete: Cascade) 
 }
 
 model Code {
@@ -61,14 +64,18 @@ model Code {
 model Language {
     id          String @id @default(cuid())
     name        String
+    challengeId String?
 
     codes       Code[]
+
+    challenge   Challenge?    @relation(fields: [challengeId], references: [id], onDelete: Cascade)   
 }
 
 model CodeGroup {
-    id       String @id @default(cuid())
+    id                  String @id @default(cuid())
 
     codes    Code[]
+    challengeSolution   ChallengeSolution?    
 } 
 
 // Necessary for Next auth

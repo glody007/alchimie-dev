@@ -34,6 +34,10 @@ export const challengeRouter = createTRPCRouter({
       const challenge = await ctx.db.challenge.findFirst({
         where: {
           id: input.challengeId
+        },
+        select: {
+          id: true,
+          languages: true
         }
       })
 
@@ -51,10 +55,24 @@ export const challengeRouter = createTRPCRouter({
 
       if(existingSolution) return existingSolution
 
+      const codes = challenge.languages.map((language) => ({
+        body: "",
+        languageId: language.id,
+      }))
+
+      const group = await ctx.db.codeGroup.create({
+        data: {
+          codes: {
+            create: codes
+          }
+        }
+      })
+
       return await ctx.db.challengeSolution.create({
         data: {
           userId: ctx.session.user.id,
-          challengeId: challenge.id
+          challengeId: challenge.id,
+          groupeId: group.id
         }
       })
 
@@ -64,7 +82,14 @@ export const challengeRouter = createTRPCRouter({
     .input(z.object({ solutionId: z.string()}))
     .query(async ({ ctx, input }) => {
       const solution = await ctx.db.challengeSolution.findFirst({
-        where: { id: input.solutionId }
+        where: { id: input.solutionId },
+        include: {
+          group: {
+            include: {
+              codes: true
+            }
+          }
+        }
       })
 
       if(!solution) throw new TRPCError({
