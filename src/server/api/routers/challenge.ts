@@ -86,7 +86,11 @@ export const challengeRouter = createTRPCRouter({
         include: {
           group: {
             include: {
-              codes: true
+              codes: {
+                include: {
+                  language: true
+                }
+              }
             }
           }
         }

@@ -1,6 +1,6 @@
 "use client"
 
-import Playground from "~/app/playground/vanilla/page"
+import { VanillaEditor } from "~/components/editor/vanilla-editor"
 import { api } from "~/trpc/react"
 
 
@@ -16,8 +16,8 @@ export default function ChallengeSolutionPage({ params }: Props) {
     if(isLoading) return <div className="flex min-h-screen justify-center items-center">Loading...</div>
 
     if(!data) return <div className="flex min-h-screen justify-center items-center">Error...</div>
-
+    
     return (
-        <Playground />
+        <VanillaEditor codeGroup={data.group} />
     )
 }

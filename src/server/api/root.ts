@@ -1,6 +1,6 @@
-import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { challengeRouter } from "./routers/challenge";
+import { codeRouter } from "./routers/code";
 
 /**
  * This is the primary router for your server.
@@ -8,8 +8,8 @@ import { challengeRouter } from "./routers/challenge";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: postRouter,
-  challenge: challengeRouter
+  challenge: challengeRouter,
+  code: codeRouter,
 });
 
 // export type definition of API

@@ -4,20 +4,33 @@ import React, { useEffect, useRef, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
 import { Hook, Console, Decode, Unhook } from "console-feed";
+import { RouterOutputs } from '~/trpc/shared';
+import { Button } from '../ui/button';
+import { api } from '~/trpc/react';
+import { Icons } from '../icons';
 
-export function Playground() {
+interface Props {
+  codeGroup: RouterOutputs["challenge"]["solution"]["group"],
+}
+
+export function VanillaEditor({ codeGroup }: Props) {
   const monaco = useMonaco();
   const logRef = useRef<HTMLDivElement>(null);
-  const [html, setHtml] = useState('<div></div>')
-  const [css, setCss] = useState(`div {
-    width: 200px;
-    height: 200px;
-    border-radius: 20px;
-    background-color: blue;
-  }`)
+  const [html, setHtml] = useState("")
+  const [css, setCss] = useState("")
   const [js, setJs] = useState("");
+  const [jsDoc, setJsDoc] = useState("");
   const [srcDoc, setSrcDoc] = useState("");
   const [logs, setLogs] = useState<any>([]);
+
+  const { mutate, isLoading } = api.code.updateSolutionCodes.useMutation({
+    onSuccess: (data) => {
+      console.log("Success")
+    },
+    onError: () => {
+        console.log("something went wrong")
+    }
+  })
 
   useEffect(() => {
   
@@ -42,6 +55,18 @@ export function Playground() {
   }, [])
 
   useEffect(() => {
+    for(const code of codeGroup.codes) {
+      if(code.language.name === "html") {
+        setHtml(code.body)
+      } else if (code.language.name === "css") {
+        setCss(code.body)
+      } else if (code.language.name === "javascript") {
+        setJs(code.body)
+      }
+    }
+  }, [codeGroup]);
+
+  useEffect(() => {
     // 👇️ scroll to bottom every time messages change
     logRef.current?.scrollIntoView({behavior: 'auto'});
     
@@ -53,13 +78,15 @@ export function Playground() {
         <html lang="en">
           <body>${html}</body>
           <style>${css}</style>
-          <script>${js}</script>
+          <script>${jsDoc}</script>
         </html>
       `);
+
+      
     }, 200);
 
     return () => clearTimeout(timeout);
-  }, [html, css, js]);
+  }, [html, css, jsDoc]);
 
   useEffect(() => {
     if (monaco) {
@@ -88,13 +115,58 @@ export function Playground() {
         window.parent.postMessage(e, "*");
       }
     `
-    if(value) setJs(jsDoc)
+    if(value) {
+      setJs(value)
+      setJsDoc(jsDoc)
+    }
+  }
+
+  function save() {
+    mutate({
+      codes: codeGroup.codes.map((code) => {
+        if(code.language.name === "javascript") {
+          return {
+            id: code.id,
+            body: js
+          }
+        }
+        
+        if (code.language.name === "css") {
+          return {
+            id: code.id,
+            body: css
+          }
+        } 
+
+        if (code.language.name === "html") {
+          return {
+            id: code.id,
+            body: html
+          }
+        }
+
+        return {
+          id: code.id,
+          body: ""
+        }
+      })
+    })
   }
 
   return (
-    <div className='h-screen'>
+    <div className='h-screen flex flex-col divide-y'>
+      <div className='flex justify-between items-center p-4 bg-foreground/90'>
+        <div></div>
+        <div className='flex items-center'>
+          <Button size="lg" onClick={save}>
+          {isLoading && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+            Enregistrer
+          </Button>
+        </div>
+      </div>
       <ResizablePanelGroup 
         direction="vertical"
+        className='flex-1'
       >
         <ResizablePanel 
           defaultSize={60}
