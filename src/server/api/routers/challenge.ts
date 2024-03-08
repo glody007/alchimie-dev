@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { endOfToday, startOfToday } from "date-fns";
 import { z } from "zod";
 
 import {
@@ -16,11 +15,14 @@ export const challengeRouter = createTRPCRouter({
 
   todayChallenge: publicProcedure
     .query(async ({ ctx }) => {
+      const now = new Date()
       const todayChallenge = await ctx.db.challenge.findFirst({
         where: {
           start: { 
-            gte: startOfToday(),
-            lte: endOfToday()
+            lte: now
+          },
+          end: { 
+            gte: now
           }
         }
       })
