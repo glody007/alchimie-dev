@@ -23,7 +23,11 @@ export default async function Home() {
         </Link>
       </div>
       <div className="w-full flex-1 flex justify-center items-center">
-        <ChallengeCard challenge={challenge} /> 
+        {challenge ? (
+          <ChallengeCard challenge={challenge} /> 
+        ) : (
+          <p>No challenge for today</p>
+        )}
       </div>
     </main>
   );

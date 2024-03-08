@@ -20,7 +20,8 @@ model Challenge {
     description String
     image       String
     createdAt   DateTime @default(now())
-    day         DateTime
+    start       DateTime 
+    end         DateTime
 
     challengesSolutions ChallengeSolution[]
     languages           Language[]

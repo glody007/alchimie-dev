@@ -9,20 +9,20 @@ import {
 } from "~/server/api/trpc";
 
 export const challengeRouter = createTRPCRouter({
+  all: publicProcedure
+    .query(({ ctx }) => {
+      return ctx.db.challenge.findMany()
+    }),
+
   todayChallenge: publicProcedure
     .query(async ({ ctx }) => {
       const todayChallenge = await ctx.db.challenge.findFirst({
         where: {
-            day: { 
-              gte: startOfToday(),
-              lte: endOfToday()
-            }
+          start: { 
+            gte: startOfToday(),
+            lte: endOfToday()
+          }
         }
-      })
-
-      if(!todayChallenge) throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Pas de challenge aujourd'hui"
       })
 
       return todayChallenge;

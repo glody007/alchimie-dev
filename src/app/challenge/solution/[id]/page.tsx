@@ -1,8 +1,5 @@
-"use client"
-
-import { VanillaEditor } from "~/components/editor/vanilla-editor"
-import { api } from "~/trpc/react"
-
+import { Suspense } from "react"
+import { SolutionImplementation } from "~/components/challenge/solution-implementation"
 
 interface Props {
     params: {
@@ -10,14 +7,15 @@ interface Props {
     }
 }
 
-export default function ChallengeSolutionPage({ params }: Props) {
-    const { data, isLoading } =  api.challenge.solution.useQuery({ solutionId: params.id })
-    
-    if(isLoading) return <div className="flex min-h-screen justify-center items-center">Loading...</div>
+export default async function ChallengeSolutionPage({ params }: Props) {
 
-    if(!data) return <div className="flex min-h-screen justify-center items-center">Error...</div>
-    
     return (
-        <VanillaEditor codeGroup={data.group} />
+        <Suspense fallback={(
+            <div className="flex min-h-screen justify-center items-center">
+                Loading...
+            </div>
+        )}>
+            <SolutionImplementation solutionId={params.id} />
+        </Suspense>
     )
 }
