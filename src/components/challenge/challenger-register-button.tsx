@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { Button } from "~/components/ui/button"
@@ -32,7 +32,7 @@ export function ChallengeRegisterButton({ challengeId }: Props) {
         if(session) {
             mutate({ challengeId })
         } else {
-            router.push("/api/auth/signin")
+            signIn()
         }
     }
 
