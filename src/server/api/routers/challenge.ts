@@ -105,4 +105,41 @@ export const challengeRouter = createTRPCRouter({
 
       return solution;
     }),
+
+  // TO DO: add admin access and pagination
+  userSolutions: protectedProcedure
+    .input(z.object({ userId: z.string()}))
+    .query(async ({ ctx, input }) => {
+      const { user } = ctx.session
+      const solutions = await ctx.db.challengeSolution.findMany({
+        where: {
+          userId: input.userId
+        },
+        include: {
+          challenge: true
+        }
+      })
+
+      return {
+        solutions
+      }
+    }),
+
+  mySolutions: protectedProcedure
+    .query(async ({ ctx }) => {
+      const { user } = ctx.session
+      const solutions = await ctx.db.challengeSolution.findMany({
+        where: {
+          userId: user.id
+        },
+        include: {
+          challenge: true
+        }
+      })
+
+      return {
+        solutions
+      }
+    })
+
 });
