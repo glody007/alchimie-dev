@@ -9,7 +9,7 @@ export default function PersonalSpaceLayout({
         <div className="h-screen flex flex-col divide-y">
             <header className="p-4">
                 <Link href="/" className="font-bold">
-                    Home
+                    Accueil
                 </Link>
             </header>
             <main className="flex-1">
