@@ -5,7 +5,7 @@ import { cn } from "~/lib/utils"
 import { api } from "~/trpc/server"
 
 export default async function PersonalSpaceHomePage() {
-    const data = await api.challenge.mySolutions.query() 
+    const data = await api.challenge.getMySolutions.query() 
 
     return (
         <div className="w-full p-4 py-8">

@@ -6,7 +6,7 @@ interface Props {
 }
 
 export async function SolutionImplementation({ solutionId }: Props) {
-    const solution =  await api.challenge.solution.query({ solutionId })
+    const solution =  await api.challenge.getSolution.query({ solutionId })
     
     return (
         <VanillaEditor codeGroup={solution.group} />

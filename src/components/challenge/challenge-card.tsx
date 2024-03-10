@@ -4,12 +4,16 @@ import Image from "next/image"
 import { useCountdown } from "~/lib/hooks/use-countdown"
 import { RouterOutputs } from "~/trpc/shared"
 import { ChallengeRegisterButton } from "./challenger-register-button"
+import Link from "next/link"
+import { cn } from "~/lib/utils"
+import { buttonVariants } from "~/components/ui/button"
 
 interface Props {
-  challenge: RouterOutputs["challenge"]["all"][number]
+  challenge: RouterOutputs["challenge"]["getAll"][number],
+  showDetailButton?: Boolean
 }
 
-export function ChallengeCard({ challenge }: Props) {
+export function ChallengeCard({ challenge, showDetailButton }: Props) {
   const [hours, minutes, secondes] = useCountdown(challenge.end)
 
   return (
@@ -29,12 +33,25 @@ export function ChallengeCard({ challenge }: Props) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-start gap-2">
-          <p className="first-letter:uppercase text-sm text-muted-foreground">
-            {challenge.description}
-          </p>
+        <div className="space-y-4 gap-4">
           <div>
-              <ChallengeRegisterButton challengeId={challenge.id} />
+            <h3 className="font-semibold">
+              {challenge.name}
+            </h3>
+            <p className="first-letter:uppercase text-sm text-muted-foreground">
+              {challenge.description}
+            </p>
+          </div>
+          <div className="space-x-2">
+            <ChallengeRegisterButton challengeId={challenge.id} />
+            {showDetailButton && (
+              <Link 
+                className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+                href={`/challenge/${challenge.id}`}
+              >
+                Details
+              </Link>
+            )}
           </div>
         </div>
       </div>

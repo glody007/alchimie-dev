@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RouterOutputs } from "~/trpc/shared";
 
 interface SolutionCardProps {
-    solution: RouterOutputs["challenge"]["userSolutions"]["solutions"][number]
+    solution: RouterOutputs["challenge"]["getUserSolutions"]["solutions"][number]
 }
 
 export function SolutionCard({ solution }: SolutionCardProps) {
