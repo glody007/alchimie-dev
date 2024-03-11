@@ -15,12 +15,12 @@ export async function Header() {
             {session ? "Sign out" : "Sign in"}
             </Link>
             {session && (
-            <Link 
-                href="/personal-space"
-                className={cn(buttonVariants({ variant: "outline" }))}
-            >
-                Personal space
-            </Link>
+                <Link 
+                    href="/personal-space"
+                    className={cn(buttonVariants({ variant: "outline" }))}
+                >
+                    Espace personel
+                </Link>
             )}
         </div>
     )

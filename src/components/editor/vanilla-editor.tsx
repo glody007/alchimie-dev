@@ -5,9 +5,11 @@ import Editor, { useMonaco } from '@monaco-editor/react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
 import { Hook, Console, Decode, Unhook } from "console-feed";
 import { RouterOutputs } from '~/trpc/shared';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { api } from '~/trpc/react';
 import { Icons } from '../icons';
+import Link from 'next/link';
+import { cn } from '~/lib/utils';
 
 interface Props {
   codeGroup: RouterOutputs["challenge"]["getSolution"]["group"],
@@ -171,14 +173,21 @@ export function VanillaEditor({ codeGroup }: Props) {
   return (
     <div className='h-screen flex flex-col divide-y'>
       <div className='flex justify-between items-center p-4 bg-foreground/90'>
-        <div></div>
+        <div>
+          <Link 
+            href="/personal-space"
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
+            Espace personel
+          </Link>
+        </div>
         <div className='flex items-center gap-2'>
           <Button size="lg" onClick={save}>
-          {isSaving && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+            {isSaving && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Enregistrer
           </Button>
           <Button size="lg" variant="destructive" onClick={submit}>
-          {isSumitting && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+            {isSumitting && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Soumettre
           </Button>
         </div>
