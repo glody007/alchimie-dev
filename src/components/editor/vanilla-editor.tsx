@@ -10,7 +10,7 @@ import { api } from '~/trpc/react';
 import { Icons } from '../icons';
 
 interface Props {
-  codeGroup: RouterOutputs["challenge"]["solution"]["group"],
+  codeGroup: RouterOutputs["challenge"]["getSolution"]["group"],
 }
 
 export function VanillaEditor({ codeGroup }: Props) {
@@ -23,12 +23,21 @@ export function VanillaEditor({ codeGroup }: Props) {
   const [srcDoc, setSrcDoc] = useState("");
   const [logs, setLogs] = useState<any>([]);
 
-  const { mutate, isLoading } = api.code.updateSolutionCodes.useMutation({
+  const { mutate: updateCodes, isLoading: isSaving } = api.code.updateSolutionCodes.useMutation({
     onSuccess: (data) => {
       console.log("Success")
     },
     onError: () => {
-        console.log("something went wrong")
+      console.log("something went wrong")
+    }
+  })
+
+  const { mutate: submitSolution, isLoading: isSumitting } = api.code.submitSolution.useMutation({
+    onSuccess: (data) => {
+      console.log("Success")
+    },
+    onError: () => {
+      console.log("something went wrong")
     }
   })
 
@@ -122,7 +131,7 @@ export function VanillaEditor({ codeGroup }: Props) {
   }
 
   function save() {
-    mutate({
+    updateCodes({
       codes: codeGroup.codes.map((code) => {
         if(code.language.name === "javascript") {
           return {
@@ -153,14 +162,24 @@ export function VanillaEditor({ codeGroup }: Props) {
     })
   }
 
+  function submit() {
+    submitSolution({ 
+      solutionGroupeId: codeGroup.id 
+    })
+  }
+
   return (
     <div className='h-screen flex flex-col divide-y'>
       <div className='flex justify-between items-center p-4 bg-foreground/90'>
         <div></div>
-        <div className='flex items-center'>
+        <div className='flex items-center gap-2'>
           <Button size="lg" onClick={save}>
-          {isLoading && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+          {isSaving && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Enregistrer
+          </Button>
+          <Button size="lg" variant="destructive" onClick={submit}>
+          {isSumitting && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+            Soumettre
           </Button>
         </div>
       </div>

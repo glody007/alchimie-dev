@@ -23,8 +23,9 @@ model Challenge {
     start       DateTime 
     end         DateTime
 
-    challengesSolutions ChallengeSolution[]
-    languages           Language[]
+    challengesSolutions   ChallengeSolution[]
+    challengesSubmissions ChallengeSubmission[]
+    languages             Language[]
 
     @@index([name])
 }
@@ -40,13 +41,26 @@ model ChallengeSolution {
     group       CodeGroup   @relation(fields: [groupeId], references: [id], onDelete: Cascade) 
 }
 
+model ChallengeSubmission {
+    id          String      @id @default(cuid())
+    userId      String 
+    challengeId String
+    groupeId    String      @unique
+
+    user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    challenge   Challenge   @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+    group       CodeGroup   @relation(fields: [groupeId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, challengeId]) 
+}
+
 model Code {
-    id          String @id @default(cuid())
+    id          String        @id @default(cuid())
     body        String
     languageId  String
     groupeId    String?
 
-    language    Language    @relation(fields: [languageId], references: [id], onDelete: Cascade) 
+    language    Language      @relation(fields: [languageId], references: [id], onDelete: Cascade) 
     group       CodeGroup?    @relation(fields: [groupeId], references: [id], onDelete: Cascade)    
 }
 
@@ -65,6 +79,7 @@ model CodeGroup {
 
     codes    Code[]
     challengeSolution   ChallengeSolution?    
+    challengeSubmission ChallengeSubmission? 
 } 
 
 // Necessary for Next auth
@@ -103,6 +118,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     challengesSolutions ChallengeSolution[]
+    challengesSubmissions ChallengeSubmission[]
 }
 
 model VerificationToken {

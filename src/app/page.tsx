@@ -1,5 +1,5 @@
 import { unstable_noStore as noStore } from "next/cache";
-import { ChallengeCard } from "~/components/challenge/challenge-card";
+import { Challenge } from "~/components/challenge/challenge";
 import { Header } from "~/components/challenge/header";
 import { api } from "~/trpc/server";
 
@@ -13,7 +13,7 @@ export default async function Home() {
       <Header />
       <div className="w-full flex-1 flex justify-center items-center">
         {challenge ? (
-          <ChallengeCard challenge={challenge} showDetailButton={true} /> 
+          <Challenge challenge={challenge} showDetailButton={true} /> 
         ) : (
           <p>No challenge for today</p>
         )}

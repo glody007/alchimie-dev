@@ -91,7 +91,7 @@ export const challengeRouter = createTRPCRouter({
       })
 
     }),
-    
+
   getSolution: publicProcedure
     .input(z.object({ solutionId: z.string()}))
     .query(async ({ ctx, input }) => {
@@ -152,6 +152,21 @@ export const challengeRouter = createTRPCRouter({
       return {
         solutions
       }
-    })
+    }),
+
+    getSubmissions: publicProcedure
+      .input(z.object({ challengeId: z.string() }))
+      .query(async ({ ctx, input }) => {
+        const submissions = await ctx.db.challengeSubmission.findMany({
+          where: {
+            challengeId: input.challengeId
+          },
+          include: {
+            user: true
+          }
+        })
+
+        return submissions
+      })
 
 });
