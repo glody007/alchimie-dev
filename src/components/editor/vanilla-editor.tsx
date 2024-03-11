@@ -24,28 +24,28 @@ export function VanillaEditor({ codeGroup }: Props) {
   const [jsDoc, setJsDoc] = useState("");
   const [srcDoc, setSrcDoc] = useState("");
   const [logs, setLogs] = useState<any>([]);
+  const [canBeSubmitted, setCanBeSubmitted] = useState(false)
+  const [canBeSaved, setCanBeSaved] = useState(false)
 
   const { mutate: updateCodes, isLoading: isSaving } = api.code.updateSolutionCodes.useMutation({
     onSuccess: (data) => {
       console.log("Success")
+      setCanBeSubmitted(true)
     },
     onError: () => {
       console.log("something went wrong")
     }
   })
 
-  const { mutate: submitSolution, isLoading: isSumitting } = api.code.submitSolution.useMutation({
+  const { mutate: submitSolution, isLoading: isSubmitting } = api.code.submitSolution.useMutation({
     onSuccess: (data) => {
       console.log("Success")
+      setCanBeSubmitted(false)
     },
     onError: () => {
       console.log("something went wrong")
     }
   })
-
-  useEffect(() => {
-  
-  }, []);
 
   // run once!
   useEffect(() => {
@@ -182,12 +182,21 @@ export function VanillaEditor({ codeGroup }: Props) {
           </Link>
         </div>
         <div className='flex items-center gap-2'>
-          <Button size="lg" onClick={save}>
+          <Button 
+            size="lg" 
+            onClick={save} 
+            disabled={isSaving}
+          >
             {isSaving && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Enregistrer
           </Button>
-          <Button size="lg" variant="destructive" onClick={submit}>
-            {isSumitting && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
+          <Button 
+            size="lg"   
+            variant="destructive" 
+            onClick={submit}
+            disabled={isSubmitting || !canBeSubmitted}
+          >
+            {isSubmitting && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Soumettre
           </Button>
         </div>

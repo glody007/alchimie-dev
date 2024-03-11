@@ -34,6 +34,8 @@ model ChallengeSolution {
     id          String      @id @default(cuid())
     userId      String 
     challengeId String
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @default(now())
     groupeId    String      @unique
 
     user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -45,6 +47,7 @@ model ChallengeSubmission {
     id          String      @id @default(cuid())
     userId      String 
     challengeId String
+    submittedAt DateTime    @default(now())
     groupeId    String      @unique
 
     user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)

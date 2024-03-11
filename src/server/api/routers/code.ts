@@ -18,6 +18,8 @@ export const codeRouter = createTRPCRouter({
         )
     }))
     .mutation(async ({ ctx, input }) => {
+      let solutionId = undefined
+
       for(const inputCode of input.codes) {
         const code = await ctx.db.code.findFirst({
             where: {
@@ -47,6 +49,8 @@ export const codeRouter = createTRPCRouter({
             })
         }
 
+        solutionId = code.group.challengeSolution.id
+
         await ctx.db.code.update({
             where: {
                 id: inputCode.id
@@ -56,6 +60,17 @@ export const codeRouter = createTRPCRouter({
             }
         })
 
+      }
+
+      if(solutionId) {
+        await ctx.db.challengeSolution.update({
+            where: {
+                id: solutionId
+            },
+            data: {
+                updatedAt: new Date()
+            }
+        })
       }
 
       return null
@@ -116,7 +131,6 @@ export const codeRouter = createTRPCRouter({
             })
 
             if(existingSubmission) {
-                
                 const updates = existingSubmission.group.codes.map(code => {
                     const solutionCode = solutionGroupe.codes.find(solutionCode => code.languageId === solutionCode.languageId)
 
@@ -134,7 +148,17 @@ export const codeRouter = createTRPCRouter({
                         }
                     })
                 })
+
                 await ctx.db.$transaction(updates)
+
+                return  ctx.db.challengeSubmission.update({
+                    where: {
+                        id: existingSubmission.id
+                    },
+                    data: {
+                        submittedAt: new Date()
+                    }
+                })
 
                 return existingSubmission
             }
