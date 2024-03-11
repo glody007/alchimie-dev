@@ -229,12 +229,15 @@ export function VanillaEditor({ codeGroup }: Props) {
               defaultSize={25}
             >
               <div className="h-full">
-                  <Editor 
-                    defaultValue={html}
-                    defaultLanguage="html" 
-                    theme="vs-dark"
-                    onChange={handleChangeHtml}
-                  />
+                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                  HTML
+                </div>
+                <Editor 
+                  defaultValue={html}
+                  defaultLanguage="html" 
+                  theme="vs-dark"
+                  onChange={handleChangeHtml}
+                />
               </div>
             </ResizablePanel>
             <ResizableHandle />
@@ -242,6 +245,9 @@ export function VanillaEditor({ codeGroup }: Props) {
               defaultSize={25}
             >
               <div className="h-full">
+                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                  CSS
+                </div>
                 <Editor 
                   defaultValue={css}
                   defaultLanguage="css" 
@@ -255,6 +261,9 @@ export function VanillaEditor({ codeGroup }: Props) {
               defaultSize={25}
             >
               <div className="h-full">
+                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                  JS
+                </div>
                 <Editor 
                   defaultValue={js}
                   defaultLanguage="javascript" 
