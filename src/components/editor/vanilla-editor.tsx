@@ -31,6 +31,7 @@ export function VanillaEditor({ codeGroup }: Props) {
     onSuccess: (data) => {
       console.log("Success")
       setCanBeSubmitted(true)
+      setCanBeSaved(false)
     },
     onError: () => {
       console.log("something went wrong")
@@ -84,6 +85,18 @@ export function VanillaEditor({ codeGroup }: Props) {
   }, [logs]);
 
   useEffect(() => {
+    let modified = false
+    for(const code of codeGroup.codes) {
+      if(
+        (code.language.name === "html" && code.body !== html) ||
+        (code.language.name === "css" && code.body !== css) ||
+        (code.language.name === "javascript" && code.body !== js)
+      ) {
+        modified = true 
+      }
+    }
+    setCanBeSaved(modified)
+
     const timeout = setTimeout(() => {
       setSrcDoc(`
         <html lang="en">
@@ -97,7 +110,7 @@ export function VanillaEditor({ codeGroup }: Props) {
     }, 200);
 
     return () => clearTimeout(timeout);
-  }, [html, css, jsDoc]);
+  }, [html, css, js, jsDoc]);
 
   useEffect(() => {
     if (monaco) {
@@ -127,9 +140,9 @@ export function VanillaEditor({ codeGroup }: Props) {
       }
     `
     if(value) {
-      setJs(value)
       setJsDoc(jsDoc)
     }
+    setJs(value || '')
   }
 
   function save() {
@@ -185,7 +198,7 @@ export function VanillaEditor({ codeGroup }: Props) {
           <Button 
             size="lg" 
             onClick={save} 
-            disabled={isSaving}
+            disabled={isSaving || !canBeSaved}
           >
             {isSaving && (<Icons.spinner className="mr-2 size-4 animate-spin" />)}
             Enregistrer
