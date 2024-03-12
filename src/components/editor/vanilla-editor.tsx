@@ -3,8 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
-import { Hook, Console, Decode, Unhook } from "console-feed";
-import { RouterOutputs } from '~/trpc/shared';
+import { Hook, Console, Unhook } from "console-feed";
+import type { RouterOutputs } from '~/trpc/shared';
 import { Button, buttonVariants } from '../ui/button';
 import { api } from '~/trpc/react';
 import { Icons } from '../icons';
@@ -32,7 +32,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
   const [showChallenge, setShowChallenge] = useState(false)
 
   const { mutate: updateCodes, isLoading: isSaving } = api.code.updateSolutionCodes.useMutation({
-    onSuccess: (data) => {
+    onSuccess: () => {
       console.log("Success")
       setCanBeSubmitted(true)
       setCanBeSaved(false)
@@ -43,7 +43,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
   })
 
   const { mutate: submitSolution, isLoading: isSubmitting } = api.code.submitSolution.useMutation({
-    onSuccess: (data) => {
+    onSuccess: () => {
       console.log("Success")
       setCanBeSubmitted(false)
     },
@@ -114,7 +114,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
     }, 200);
 
     return () => clearTimeout(timeout);
-  }, [html, css, js, jsDoc]);
+  }, [html, css, js, jsDoc, codeGroup.codes]);
 
   useEffect(() => {
     if (monaco) {
