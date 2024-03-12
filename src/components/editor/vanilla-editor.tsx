@@ -292,7 +292,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
         >
           <ResizablePanelGroup 
             direction="horizontal"
-            className='h-full bg-foreground/90'
+            className='h-full'
           >
             <ResizablePanel 
               defaultSize={66}

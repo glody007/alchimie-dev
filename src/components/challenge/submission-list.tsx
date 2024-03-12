@@ -1,5 +1,6 @@
 import { api } from "~/trpc/server"
 import { Submission } from "./submission"
+import { EmptyPlaceholder } from "../ui/empty"
 
 interface Props {
     challengeId: string
@@ -10,9 +11,19 @@ export default async function SubmissionList({ challengeId }: Props) {
     
     return (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {submissions.map(submission => (
-                <Submission key={submission.id} submission={submission} />
-            ))}
+            {submissions.length > 0 ? (
+                <>
+                    {submissions.map(submission => (
+                        <Submission key={submission.id} submission={submission} />
+                    ))}
+                </>
+            ) : (
+                <EmptyPlaceholder className="col-span-full">
+                    <EmptyPlaceholder.Description>
+                        Aucune publication pour l'instant
+                    </EmptyPlaceholder.Description>
+                </EmptyPlaceholder>
+            )}
         </div>
     )
 }

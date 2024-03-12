@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata = {
   title: "Alchimiste Dev",
-  description: "Transforme your time into software",
+  description: "Transform your time into software",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

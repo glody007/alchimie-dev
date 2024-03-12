@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { SolutionCard } from "~/components/personal-space/solution-card"
 import { buttonVariants } from "~/components/ui/button"
+import { EmptyPlaceholder } from "~/components/ui/empty"
 import { cn } from "~/lib/utils"
 import { api } from "~/trpc/server"
 
@@ -20,9 +21,20 @@ export default async function PersonalSpaceHomePage() {
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {data.solutions.map((solution) => (
-                        <SolutionCard key={solution.id} solution={solution} />
-                    ))}
+                    {data.solutions.length > 0 ? (
+                        <>
+                            {data.solutions.map((solution) => (
+                                <SolutionCard key={solution.id} solution={solution} />
+                            ))}
+                        </>
+                    ) : (
+                        <EmptyPlaceholder className="col-span-full">
+                            <EmptyPlaceholder.Description>
+                                Vous n'avez aucun challenge
+                            </EmptyPlaceholder.Description>
+                        </EmptyPlaceholder>
+                    )}
+
                 </div>
             </div>
         </div>
