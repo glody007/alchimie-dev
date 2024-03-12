@@ -10,12 +10,14 @@ import { api } from '~/trpc/react';
 import { Icons } from '../icons';
 import Link from 'next/link';
 import { cn } from '~/lib/utils';
+import Image from 'next/image';
 
 interface Props {
-  codeGroup: RouterOutputs["challenge"]["getSolution"]["group"],
+  codeGroup: RouterOutputs["challenge"]["getSolution"]["group"]
+  challengeImage?: string
 }
 
-export function VanillaEditor({ codeGroup }: Props) {
+export function VanillaEditor({ codeGroup, challengeImage }: Props) {
   const monaco = useMonaco();
   const logRef = useRef<HTMLDivElement>(null);
   const [html, setHtml] = useState("")
@@ -26,6 +28,8 @@ export function VanillaEditor({ codeGroup }: Props) {
   const [logs, setLogs] = useState<any>([]);
   const [canBeSubmitted, setCanBeSubmitted] = useState(false)
   const [canBeSaved, setCanBeSaved] = useState(false)
+  const [showConsole, setShowConsole] = useState(false)
+  const [showChallenge, setShowChallenge] = useState(false)
 
   const { mutate: updateCodes, isLoading: isSaving } = api.code.updateSolutionCodes.useMutation({
     onSuccess: (data) => {
@@ -145,6 +149,14 @@ export function VanillaEditor({ codeGroup }: Props) {
     setJs(value || '')
   }
 
+  function toggleConsole() {
+    setShowConsole(state => !state)
+  }
+
+  function toggleShowChallenge() {
+    setShowChallenge(state => !state)
+  }
+
   function save() {
     updateCodes({
       codes: codeGroup.codes.map((code) => {
@@ -185,7 +197,7 @@ export function VanillaEditor({ codeGroup }: Props) {
 
   return (
     <div className='h-screen flex flex-col divide-y'>
-      <div className='flex justify-between items-center p-4 bg-foreground/90'>
+      <div className='flex justify-between items-center p-2 bg-foreground/90'>
         <div>
           <Link 
             href="/personal-space"
@@ -219,17 +231,17 @@ export function VanillaEditor({ codeGroup }: Props) {
         className='flex-1'
       >
         <ResizablePanel 
-          defaultSize={60}
+          defaultSize={30}
         >
           <ResizablePanelGroup 
             direction="horizontal"
-            className='h-full'
+            className='h-full bg-foreground/90'
           >
             <ResizablePanel 
               defaultSize={25}
             >
               <div className="h-full">
-                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                <div className='pl-8 text-sm text-background font-semibold'>
                   HTML
                 </div>
                 <Editor 
@@ -245,7 +257,7 @@ export function VanillaEditor({ codeGroup }: Props) {
               defaultSize={25}
             >
               <div className="h-full">
-                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                <div className='pl-8 text-sm text-background font-semibold'>
                   CSS
                 </div>
                 <Editor 
@@ -261,7 +273,7 @@ export function VanillaEditor({ codeGroup }: Props) {
               defaultSize={25}
             >
               <div className="h-full">
-                <div className='pl-8 text-sm text-background font-semibold bg-foreground/90'>
+                <div className='pl-8 text-sm text-background font-semibold'>
                   JS
                 </div>
                 <Editor 
@@ -278,26 +290,63 @@ export function VanillaEditor({ codeGroup }: Props) {
         <ResizablePanel 
           defaultSize={30}
         >
-          <div className="h-full col-span-2">
-            <iframe
-              srcDoc={srcDoc}
-              title="output"
-              sandbox="allow-scripts"
-              frameBorder="0"
-              height="100%"
-              width="100%"
-            />
-          </div>
+          <ResizablePanelGroup 
+            direction="horizontal"
+            className='h-full bg-foreground/90'
+          >
+            <ResizablePanel 
+              defaultSize={66}
+            >
+              <div className="h-full">
+                <iframe
+                  srcDoc={srcDoc}
+                  title="output"
+                  sandbox="allow-scripts"
+                  frameBorder="0"
+                  height="100%"
+                  width="100%"
+                />
+              </div>
+            </ResizablePanel>
+            {(showChallenge && challengeImage) && (
+              <>
+                <ResizableHandle />
+                <ResizablePanel 
+                  defaultSize={33}
+                >
+                  <div className="h-full bg-background overflow-scroll">
+                    <div className="relative w-[200px] sm:w-[400px] h-[400px]">
+                      <Image src={challengeImage} alt="challenge image" fill />
+                    </div>
+                  </div>
+                </ResizablePanel>
+              </>
+            )}
+          </ResizablePanelGroup>
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel 
-          defaultSize={20}
-        >
-          <div className="h-full overflow-y-scroll" style={{ backgroundColor: '#242424' }}>
-            <Console logs={logs} variant="dark" />
-          </div>
-        </ResizablePanel>
+        {showConsole && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel 
+              defaultSize={20}
+            >
+              <div className="h-full overflow-y-scroll" style={{ backgroundColor: '#242424' }}>
+                <Console logs={logs} variant="dark" />
+              </div>
+            </ResizablePanel>
+          </>
+        )}
       </ResizablePanelGroup>
+      <div className='flex justify-between items-center p-2 bg-foreground/90'>
+        <div className='flex gap-2'>
+          <Button variant="secondary" size="sm" onClick={toggleConsole}>
+            Console
+          </Button>
+          <Button variant="secondary" size="sm" onClick={toggleShowChallenge}>
+            Challenge
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

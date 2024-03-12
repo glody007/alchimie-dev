@@ -1,3 +1,4 @@
+import { format } from "date-fns"
 import Image from "next/image"
 import { RouterOutputs } from "~/trpc/shared"
 
@@ -16,7 +17,9 @@ export function Submission({ submission }: Props) {
             <div className="w-full flex items-center justify-between p-4">
                 <div>
                     <h3 className="text-sm font-semibold">{submission.user.name}</h3>
-                    <p className="text-xs text-muted-foreground">20 april 2024</p>
+                    <p className="text-xs text-muted-foreground">
+                        {format(submission.submittedAt, "dd MMM yyyy hh:mm")}
+                    </p>
                 </div>
                 {userImage && (
                     <Image 

@@ -98,6 +98,7 @@ export const challengeRouter = createTRPCRouter({
       const solution = await ctx.db.challengeSolution.findFirst({
         where: { id: input.solutionId },
         include: {
+          challenge: true,
           group: {
             include: {
               codes: {
