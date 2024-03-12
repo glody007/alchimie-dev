@@ -1,12 +1,20 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { SolutionCard } from "~/components/personal-space/solution-card"
 import { buttonVariants } from "~/components/ui/button"
 import { EmptyPlaceholder } from "~/components/ui/empty"
 import { cn } from "~/lib/utils"
+import { getServerAuthSession } from "~/server/auth"
 import { api } from "~/trpc/server"
 
 export default async function PersonalSpaceHomePage() {
-    const data = await api.challenge.getMySolutions.query() 
+    const session = await getServerAuthSession()
+
+    if(!session) {
+        redirect('/login')
+    }
+
+    const data = await api.challenge.getUserSolutions.query({ userId: session.user.id }) 
 
     return (
         <div className="w-full p-4 py-8">

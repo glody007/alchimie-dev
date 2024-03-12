@@ -11,6 +11,7 @@ import { Icons } from '../icons';
 import Link from 'next/link';
 import { cn } from '~/lib/utils';
 import Image from 'next/image';
+import type { Message } from 'console-feed/lib/definitions/Console';
 
 interface Props {
   codeGroup: RouterOutputs["challenge"]["getSolution"]["group"]
@@ -25,7 +26,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
   const [js, setJs] = useState("");
   const [jsDoc, setJsDoc] = useState("");
   const [srcDoc, setSrcDoc] = useState("");
-  const [logs, setLogs] = useState<any>([]);
+  const [logs, setLogs] = useState<Message[]>([]);
   const [canBeSubmitted, setCanBeSubmitted] = useState(false)
   const [canBeSaved, setCanBeSaved] = useState(false)
   const [showConsole, setShowConsole] = useState(false)
@@ -61,7 +62,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
     window.addEventListener('message', onMessage);
     const hookedConsole = Hook(
       window.console,
-      (log) => setLogs((currLogs: any) => [...currLogs, log]),
+      (log) => setLogs((currLogs: Message[]) => [...currLogs, log]),
       false
     )
     return () => {
@@ -331,6 +332,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
               defaultSize={20}
             >
               <div className="h-full overflow-y-scroll" style={{ backgroundColor: '#242424' }}>
+                {/* @ts-expect-error: Should expect message from console */}
                 <Console logs={logs} variant="dark" />
               </div>
             </ResizablePanel>
