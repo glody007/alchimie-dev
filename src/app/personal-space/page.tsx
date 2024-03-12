@@ -30,7 +30,7 @@ export default async function PersonalSpaceHomePage() {
                     ) : (
                         <EmptyPlaceholder className="col-span-full">
                             <EmptyPlaceholder.Description>
-                                Vous n'avez aucun challenge
+                                Vous n&apos;avez aucun challenge
                             </EmptyPlaceholder.Description>
                         </EmptyPlaceholder>
                     )}

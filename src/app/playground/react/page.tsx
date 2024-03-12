@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
+import { LiveProvider, LivePreview } from "react-live";
 
 
 
@@ -17,7 +17,7 @@ export default function Playground() {
   }, [monaco]);
 
   function handleChange(value?: string) {
-    setCode(value || '')
+    setCode(value ?? '')
   }
 
   return (

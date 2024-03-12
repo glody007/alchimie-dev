@@ -20,7 +20,7 @@ export default async function SubmissionList({ challengeId }: Props) {
             ) : (
                 <EmptyPlaceholder className="col-span-full">
                     <EmptyPlaceholder.Description>
-                        Aucune publication pour l'instant
+                        Aucune publication pour l&apos;instant
                     </EmptyPlaceholder.Description>
                 </EmptyPlaceholder>
             )}

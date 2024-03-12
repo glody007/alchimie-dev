@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useCountdown } from "~/lib/hooks/use-countdown"
-import { RouterOutputs } from "~/trpc/shared"
+import type { RouterOutputs } from "~/trpc/shared"
 import { ChallengeRegisterButton } from "./challenge-register-button"
 import Link from "next/link"
 import { cn } from "~/lib/utils"
@@ -10,7 +10,7 @@ import { buttonVariants } from "~/components/ui/button"
 
 interface Props {
   challenge: RouterOutputs["challenge"]["getAll"][number],
-  showDetailButton?: Boolean
+  showDetailButton?: boolean
 }
 
 export function Challenge({ challenge, showDetailButton }: Props) {

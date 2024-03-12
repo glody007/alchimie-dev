@@ -32,7 +32,7 @@ export function ChallengeRegisterButton({ challengeId }: Props) {
         if(session) {
             mutate({ challengeId })
         } else {
-            signIn()
+            void signIn()
         }
     }
 

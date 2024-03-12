@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { group } from "console";
 import { z } from "zod";
 
 import {
@@ -124,7 +123,6 @@ export const challengeRouter = createTRPCRouter({
   getUserSolutions: protectedProcedure
     .input(z.object({ userId: z.string()}))
     .query(async ({ ctx, input }) => {
-      const { user } = ctx.session
       const solutions = await ctx.db.challengeSolution.findMany({
         where: {
           userId: input.userId

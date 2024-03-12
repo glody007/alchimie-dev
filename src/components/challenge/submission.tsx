@@ -1,6 +1,6 @@
 import { format } from "date-fns"
 import Image from "next/image"
-import { RouterOutputs } from "~/trpc/shared"
+import type { RouterOutputs } from "~/trpc/shared"
 import { SubmissionVisualizer } from "./submission-visualizer"
 
 interface Props {

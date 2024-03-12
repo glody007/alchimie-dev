@@ -1,10 +1,7 @@
-import { HtmlHTMLAttributes } from "react";
+import type { HtmlHTMLAttributes } from "react";
 import { cn } from "~/lib/utils";
 
-interface EmptyPlaceholderProps 
-    extends HtmlHTMLAttributes<HTMLDivElement> {}
-
-export function EmptyPlaceholder({ className, children }: EmptyPlaceholderProps) {
+export function EmptyPlaceholder({ className, children }: HtmlHTMLAttributes<HTMLDivElement>) {
     return (
         <div className={cn(
             "min-w-sm min-h-64 w-full flex justify-center items-center border border-dashed rounded-xl p-4",
@@ -15,10 +12,7 @@ export function EmptyPlaceholder({ className, children }: EmptyPlaceholderProps)
     )
 }
 
-interface EmptyPlaceholderDescription 
-    extends HtmlHTMLAttributes<HTMLParagraphElement> {}
-
-EmptyPlaceholder.Description = function EmptyPlaceholderDescription({ children }: EmptyPlaceholderDescription) {
+EmptyPlaceholder.Description = function EmptyPlaceholderDescription({ children }: HtmlHTMLAttributes<HTMLParagraphElement>) {
     return (
         <p className="text-sm font-light text-muted-foreground">
             {children}

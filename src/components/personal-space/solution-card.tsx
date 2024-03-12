@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { RouterOutputs } from "~/trpc/shared";
+import type { RouterOutputs } from "~/trpc/shared";
 
 interface SolutionCardProps {
     solution: RouterOutputs["challenge"]["getUserSolutions"]["solutions"][number]

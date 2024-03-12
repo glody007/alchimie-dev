@@ -123,11 +123,11 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
   }, [monaco]);
 
   function handleChangeHtml(value?: string) {
-    setHtml(value || '')
+    setHtml(value ?? '')
   }
 
   function handleChangeCss(value?: string) {
-    setCss(value || '')
+    setCss(value ?? '')
   }
 
   function handleChangeJs(value?: string) {
@@ -146,7 +146,7 @@ export function VanillaEditor({ codeGroup, challengeImage }: Props) {
     if(value) {
       setJsDoc(jsDoc)
     }
-    setJs(value || '')
+    setJs(value ?? '')
   }
 
   function toggleConsole() {

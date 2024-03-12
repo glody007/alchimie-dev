@@ -1,7 +1,7 @@
 "use client"
 
-import { HtmlHTMLAttributes, useEffect, useState } from "react"
-import { RouterOutputs } from "~/trpc/shared"
+import { type HtmlHTMLAttributes, useEffect, useState } from "react"
+import type { RouterOutputs } from "~/trpc/shared"
 
 interface Props extends HtmlHTMLAttributes<HTMLIFrameElement> {
     codeGroup: RouterOutputs["challenge"]["getSubmissions"][number]["group"]
@@ -26,7 +26,7 @@ export function SubmissionVisualizer({ codeGroup, className }: Props) {
                 <script>${js}</script>
             </html>
         `);
-    })
+    }, [html, css, js])
 
     useEffect(() => {
         for(const code of codeGroup.codes) {

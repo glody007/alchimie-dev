@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/ui/resizable';
-import { Hook, Console, Decode, Unhook } from "console-feed";
+import { Hook, Console, Unhook } from "console-feed";
 
 export default function Playground() {
   const monaco = useMonaco();
@@ -18,10 +18,6 @@ export default function Playground() {
   const [js, setJs] = useState("");
   const [srcDoc, setSrcDoc] = useState("");
   const [logs, setLogs] = useState<any>([]);
-
-  useEffect(() => {
-  
-  }, []);
 
   // run once!
   useEffect(() => {
@@ -68,11 +64,11 @@ export default function Playground() {
   }, [monaco]);
 
   function handleChangeHtml(value?: string) {
-    setHtml(value || '')
+    setHtml(value ?? '')
   }
 
   function handleChangeCss(value?: string) {
-    setCss(value || '')
+    setCss(value ?? '')
   }
 
   function handleChangeJs(value?: string) {
