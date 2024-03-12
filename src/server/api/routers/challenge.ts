@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { group } from "console";
 import { z } from "zod";
 
 import {
@@ -163,7 +164,17 @@ export const challengeRouter = createTRPCRouter({
             challengeId: input.challengeId
           },
           include: {
-            user: true
+            user: true,
+            group: {
+              include: {
+                codes: {
+                  include: {
+                    language: true
+                  }
+                }
+
+              }
+            }
           }
         })
 

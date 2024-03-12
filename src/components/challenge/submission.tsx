@@ -1,6 +1,7 @@
 import { format } from "date-fns"
 import Image from "next/image"
 import { RouterOutputs } from "~/trpc/shared"
+import { SubmissionVisualizer } from "./submission-visualizer"
 
 interface Props {
     submission: RouterOutputs["challenge"]["getSubmissions"][number]
@@ -8,11 +9,13 @@ interface Props {
 
 export function Submission({ submission }: Props) {    
     const userImage =  submission.user.image
-
     return (
         <div className="gap-2 border rounded-xl">
             <div className="h-64 bg-muted rounded-t-xl">
-                
+                <SubmissionVisualizer 
+                    codeGroup={submission.group} 
+                    className="rounded-t-xl"
+                />
             </div>
             <div className="w-full flex items-center justify-between p-4">
                 <div>
