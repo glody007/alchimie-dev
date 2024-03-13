@@ -53,9 +53,9 @@ export function SubmissionVisualizer({ codeGroup, className }: Props) {
                 width="100%"
             />
         )
-    }, [srcDoc])
+    }, [srcDoc, className])
 
-    const { ShowSubmissionButton, ShowSubmissionModal } = useShowSubmissionModal({ 
+    const { setShowSubmissionModal, ShowSubmissionModal } = useShowSubmissionModal({ 
         content: <Iframe /> 
     })
 
@@ -64,9 +64,6 @@ export function SubmissionVisualizer({ codeGroup, className }: Props) {
             className="relative h-full" 
         >
             <ShowSubmissionModal />
-            <div className="absolute top-4 right-4">
-                <ShowSubmissionButton  />
-            </div>
             <iframe
                 className={className}
                 srcDoc={srcDoc}
@@ -75,6 +72,10 @@ export function SubmissionVisualizer({ codeGroup, className }: Props) {
                 frameBorder="0"
                 height="100%"
                 width="100%"
+            />
+            <div
+                className="absolute inset-0 rounded-t-xl cursor-pointer"
+                onClick={() => setShowSubmissionModal(true)}
             />
         </div>
     )
