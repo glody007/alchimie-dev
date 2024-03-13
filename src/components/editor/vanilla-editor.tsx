@@ -7,7 +7,7 @@ import { Hook, Console, Unhook } from "console-feed";
 import type { RouterOutputs } from '~/trpc/shared';
 import { Button, buttonVariants } from '../ui/button';
 import { api } from '~/trpc/react';
-import { Icons } from '../icons';
+import { Icons } from '../shared/icons';
 import Link from 'next/link';
 import { cn } from '~/lib/utils';
 import Image from 'next/image';

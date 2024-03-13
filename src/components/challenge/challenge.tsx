@@ -7,6 +7,7 @@ import { ChallengeRegisterButton } from "./challenge-register-button"
 import Link from "next/link"
 import { cn } from "~/lib/utils"
 import { buttonVariants } from "~/components/ui/button"
+import { useShowChallengeModal } from "./show-challenge-modal"
 
 interface Props {
   challenge: RouterOutputs["challenge"]["getAll"][number],
@@ -15,9 +16,16 @@ interface Props {
 
 export function Challenge({ challenge, showDetailButton }: Props) {
   const [hours, minutes, secondes] = useCountdown(challenge.end)
+  const { ShowChallengeButton, ShowChallengeModal } = useShowChallengeModal({ 
+    image: challenge.image
+  })
 
   return (
-      <div className="flex justify-center p-12 bg-muted rounded-lg">
+      <div className="relative flex justify-center p-12 bg-muted rounded-lg">
+         <ShowChallengeModal />
+          <div className="absolute top-4 right-4 z-10">
+            <ShowChallengeButton  />
+          </div>
         <div className="space-y-4 w-full">
           <div className="relative w-[200px] sm:w-[400px] h-[400px]">
             <Image src={challenge.image} alt={challenge.description} fill />

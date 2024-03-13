@@ -1,9 +1,10 @@
 "use client"
 
-import { type HtmlHTMLAttributes, useEffect, useState } from "react"
+import { type HtmlHTMLAttributes, useEffect, useState, useCallback } from "react"
 import type { RouterOutputs } from "~/trpc/shared"
+import { useShowSubmissionModal } from "./show-submission-modal"
 
-interface Props extends HtmlHTMLAttributes<HTMLIFrameElement> {
+interface Props extends HtmlHTMLAttributes<HTMLDivElement> {
     codeGroup: RouterOutputs["challenge"]["getSubmissions"][number]["group"]
 }
 
@@ -40,15 +41,41 @@ export function SubmissionVisualizer({ codeGroup, className }: Props) {
         }
     }, [codeGroup]);
 
+    const Iframe = useCallback(() => {
+        return (
+            <iframe
+                className={className}
+                srcDoc={srcDoc}
+                title="output"
+                sandbox="allow-scripts"
+                frameBorder="0"
+                height="100%"
+                width="100%"
+            />
+        )
+    }, [srcDoc])
+
+    const { ShowSubmissionButton, ShowSubmissionModal } = useShowSubmissionModal({ 
+        content: <Iframe /> 
+    })
+
     return (
-        <iframe
-            className={className}
-            srcDoc={srcDoc}
-            title="output"
-            sandbox="allow-scripts"
-            frameBorder="0"
-            height="100%"
-            width="100%"
-        />
+        <div 
+            className="relative h-full" 
+        >
+            <ShowSubmissionModal />
+            <div className="absolute top-4 right-4">
+                <ShowSubmissionButton  />
+            </div>
+            <iframe
+                className={className}
+                srcDoc={srcDoc}
+                title="output"
+                sandbox="allow-scripts"
+                frameBorder="0"
+                height="100%"
+                width="100%"
+            />
+        </div>
     )
 }

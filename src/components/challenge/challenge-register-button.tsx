@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { Button } from "~/components/ui/button"
 import { api } from "~/trpc/react"
-import { Icons } from "../icons"
+import { Icons } from "../shared/icons"
 
 interface Props {
     challengeId: string
