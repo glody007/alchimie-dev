@@ -70,11 +70,9 @@ model Code {
 model Language {
     id          String @id @default(cuid())
     name        String
-    challengeId String?
 
     codes       Code[]
-
-    challenge   Challenge?    @relation(fields: [challengeId], references: [id], onDelete: Cascade)   
+    challenges  Challenge[] 
 }
 
 model CodeGroup {
