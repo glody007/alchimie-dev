@@ -18,7 +18,7 @@ export function SubmissionLikeButton({
     const { data: session } = useSession()
     const { toast } = useToast()
     const router = useRouter()
-    const { mutate, isLoading } = api.challenge.toggleSubmissionLike.useMutation()
+    const { mutate } = api.challenge.toggleSubmissionLike.useMutation()
 
     function toggleLike() {
         mutate({

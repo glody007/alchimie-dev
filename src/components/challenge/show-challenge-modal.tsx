@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Icons } from "../shared/icons";
@@ -63,7 +63,7 @@ export function useShowChallengeModal({
                 image={image}
             />
         )
-    }, [showChallengeModal, setShowChallengeModal])
+    }, [showChallengeModal, setShowChallengeModal, image])
 
     const ShowChallengeButtonCallback = useCallback(() => {
         return (

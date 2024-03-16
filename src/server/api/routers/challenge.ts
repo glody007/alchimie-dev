@@ -158,7 +158,7 @@ export const challengeRouter = createTRPCRouter({
     .input(z.object({ challengeId: z.string() }))
     .query(async ({ ctx, input }) => {
  
-      const userId = ctx.session?.user.id || ""
+      const userId = ctx.session?.user.id ?? ""
 
       const submissions = await ctx.db.challengeSubmission.findMany({
         where: {
@@ -187,8 +187,6 @@ export const challengeRouter = createTRPCRouter({
           }
         }
       })
-
-      const user = ctx.session?.user
 
       return submissions
     }),
