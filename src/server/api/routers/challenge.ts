@@ -154,29 +154,72 @@ export const challengeRouter = createTRPCRouter({
       }
     }),
 
-    getSubmissions: publicProcedure
-      .input(z.object({ challengeId: z.string() }))
-      .query(async ({ ctx, input }) => {
-        const submissions = await ctx.db.challengeSubmission.findMany({
-          where: {
-            challengeId: input.challengeId
-          },
-          include: {
-            user: true,
-            group: {
-              include: {
-                codes: {
-                  include: {
-                    language: true
-                  }
-                }
+  getSubmissions: publicProcedure
+    .input(z.object({ challengeId: z.string() }))
+    .query(async ({ ctx, input }) => {
+ 
+      const userId = ctx.session?.user.id || ""
 
+      const submissions = await ctx.db.challengeSubmission.findMany({
+        where: {
+          challengeId: input.challengeId
+        },
+        include: {
+          user: true,
+          _count: {
+            select: {
+              likes: true
+            }
+          },
+          likes: {
+            where: {
+              userId: userId
+            },
+          },
+          group: {
+            include: {
+              codes: {
+                include: {
+                  language: true
+                }
               }
             }
           }
+        }
+      })
+
+      const user = ctx.session?.user
+
+      return submissions
+    }),
+
+  toggleSubmissionLike: protectedProcedure
+    .input(z.object({ challengeSubmissionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx.session
+      const existingLike = await ctx.db.challengeSubmissionLike.findFirst({
+        where: {
+          userId: user.id,
+          challengeSubmissionId: input.challengeSubmissionId
+        }
+      })
+
+      if(existingLike) {
+        await ctx.db.challengeSubmissionLike.delete({
+          where: {
+            id: existingLike.id
+          }
         })
 
-        return submissions
+        return null
+      }
+
+      return await ctx.db.challengeSubmissionLike.create({
+        data: {
+          userId: user.id,
+          challengeSubmissionId: input.challengeSubmissionId
+        }
       })
+    })
 
 });

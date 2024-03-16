@@ -50,11 +50,25 @@ model ChallengeSubmission {
     submittedAt DateTime    @default(now())
     groupeId    String      @unique
 
+    likes       ChallengeSubmissionLike[]
+
     user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     challenge   Challenge   @relation(fields: [challengeId], references: [id], onDelete: Cascade)
     group       CodeGroup   @relation(fields: [groupeId], references: [id], onDelete: Cascade)
 
     @@unique([userId, challengeId]) 
+}
+
+model ChallengeSubmissionLike {
+    id                      String                @id @default(cuid())
+    userId                  String
+    challengeSubmissionId   String
+    createdAt               DateTime    @default(now())
+
+    user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    challengeSubmission     ChallengeSubmission   @relation(fields: [challengeSubmissionId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, challengeSubmissionId]) 
 }
 
 model Code {
@@ -118,8 +132,9 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    challengesSolutions ChallengeSolution[]
-    challengesSubmissions ChallengeSubmission[]
+    challengesSolutions         ChallengeSolution[]
+    challengesSubmissions       ChallengeSubmission[]
+    challengesSubmissionsLikes  ChallengeSubmissionLike[]
 }
 
 model VerificationToken {

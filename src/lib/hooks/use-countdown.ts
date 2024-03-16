@@ -11,7 +11,7 @@ export function useCountdown(deadline: Date) {
     
     useEffect(() => {
       const interval = setInterval(() => {
-        setCountdownInSeconds((countdown) => countdown - 1)
+        setCountdownInSeconds(() => differenceInSeconds(deadline, new Date()))
       }, 1000)
   
       return () => clearTimeout(interval)
