@@ -185,6 +185,9 @@ export const challengeRouter = createTRPCRouter({
               }
             }
           }
+        },
+        orderBy: {
+          submittedAt: 'asc'
         }
       })
 
