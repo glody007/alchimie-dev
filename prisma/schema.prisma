@@ -135,6 +135,7 @@ model User {
     challengesSolutions         ChallengeSolution[]
     challengesSubmissions       ChallengeSubmission[]
     challengesSubmissionsLikes  ChallengeSubmissionLike[]
+    experiences                 Experience[]
 }
 
 model VerificationToken {
@@ -143,4 +144,20 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum ExperienceType {
+  default
+  challenge_submission
+}
+
+model Experience {
+    id            String      @id @default(cuid())
+    type          ExperienceType
+    quantity      Int 
+    sourceId      String?
+    userId        String
+    createdAt     DateTime    @default(now())
+
+    user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

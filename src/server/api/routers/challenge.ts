@@ -221,6 +221,25 @@ export const challengeRouter = createTRPCRouter({
           challengeSubmissionId: input.challengeSubmissionId
         }
       })
-    })
+    }),
 
+  getLeaderBoard: publicProcedure
+    .query(async ({ ctx }) => {
+      const leaderBoardAll = await ctx.db.experience.groupBy({
+        by: ['userId'],
+        _sum: {
+          quantity: true
+        },
+        orderBy: {
+          _sum: {
+            quantity: 'desc'
+          }
+        },
+        take: 10
+      })
+
+      return {
+        allTime: leaderBoardAll
+      }
+    })
 });
